@@ -1,9 +1,9 @@
-import 'package:daily_wellness_tracker/features/home_painel_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'src/features/home/home_controller.dart';
+import 'src/features/home/home_panel_page.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
@@ -24,7 +24,7 @@ class AppWidget extends StatelessWidget {
         ],
         supportedLocales: [Locale('pt', 'BR'), Locale('en', 'US')],
         locale: Locale('pt', 'BR'),
-        home: HomePainelPage(),
+        home: HomePanelPage(),
       ),
     );
   }
