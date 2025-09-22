@@ -1,16 +1,23 @@
-# daily_wellness_tracker
+# 📱 Daily Wellness Tracker
 
-A new Flutter project.
+Aplicativo Flutter para acompanhar e gerenciar hábitos de bem-estar diário, como hidratação e macro nutrientes.  
+O objetivo é ajudar o usuário a manter uma rotina equilibrada e saudável.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Funcionalidades
+- Registro diário de hábitos (ex: água e alimentos).  
+- Visualização do Histórico.  
+- Interface simples e intuitiva.  
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🛠️ Tecnologias Utilizadas
+- [Flutter](https://flutter.dev/) (Dart)  
+- [Provider]
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+O projeto foi desenvolvido utilizando o Provider para o controle de estado, garantindo reatividade e desacoplamento entre os componentes. 
+A organização do código segue o padrão MVVM (Model-View-ViewModel). 
+Além disso, a interface foi construída de forma simples, clara e objetiva, priorizando a usabilidade e uma navegação intuitiva para o usuário.
