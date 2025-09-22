@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/food_item.dart';
-import '../home/home_controller.dart';
+import '../../shared/models/food_item.dart';
+import '../../shared/nutrition_data_controller.dart';
 
 class AddFoodPage extends StatefulWidget {
   const AddFoodPage({super.key});
@@ -16,6 +16,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
   final _nameController = TextEditingController();
   final _caloriesController = TextEditingController();
   final _portionsController = TextEditingController(text: '1');
+  final _weightController = TextEditingController();
   final _carbsController = TextEditingController();
   final _proteinsController = TextEditingController();
   final _fatsController = TextEditingController();
@@ -27,6 +28,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
     _nameController.dispose();
     _caloriesController.dispose();
     _portionsController.dispose();
+    _weightController.dispose();
     _carbsController.dispose();
     _proteinsController.dispose();
     _fatsController.dispose();
@@ -227,7 +229,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
             ),
             const SizedBox(height: 16),
 
-            // Row for Calories and Portions
+            // Row for Calories, Portions and Weight
             Row(
               children: [
                 Expanded(
@@ -280,7 +282,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,6 +326,56 @@ class _AddFoodPageState extends State<AddFoodPage> {
                           }
                           if (double.tryParse(value) == null) {
                             return 'Número inválido';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Peso (g)',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _weightController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: '0',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF7B68EE),
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value != null && value.isNotEmpty) {
+                            if (double.tryParse(value) == null) {
+                              return 'Número inválido';
+                            }
                           }
                           return null;
                         },
@@ -525,13 +577,14 @@ class _AddFoodPageState extends State<AddFoodPage> {
         name: _nameController.text.trim(),
         calories: double.tryParse(_caloriesController.text) ?? 0.0,
         portions: double.tryParse(_portionsController.text) ?? 1.0,
+        weight: double.tryParse(_weightController.text) ?? 0.0,
         carbohydrates: double.tryParse(_carbsController.text) ?? 0.0,
         proteins: double.tryParse(_proteinsController.text) ?? 0.0,
         fats: double.tryParse(_fatsController.text) ?? 0.0,
       );
 
       // Salvar no controller
-      final controller = context.read<HomeController>();
+      final controller = context.read<NutritionDataController>();
       controller.saveFoodItem([foodItem]);
 
       // Mostrar confirmação e voltar

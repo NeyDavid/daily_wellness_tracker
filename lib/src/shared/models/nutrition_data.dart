@@ -1,4 +1,4 @@
-import 'package:daily_wellness_tracker/src/models/food_item.dart';
+import 'package:daily_wellness_tracker/src/shared/models/food_item.dart';
 
 class NutritionData {
   final DateTime date;
@@ -116,6 +116,7 @@ class NutritionData {
       'proteins': proteins,
       'fats': fats,
       'water': water,
+      'foodItems': foodItems.map((item) => item.toMap()).toList(),
     };
   }
 
@@ -138,6 +139,7 @@ class NutritionData {
 
   // Converter para JSON string
   String toJson() {
+    final foodItemsJson = foodItems.map((item) => item.toMap()).toList();
     return '''
 {
   "date": "${date.toIso8601String()}",
@@ -145,13 +147,14 @@ class NutritionData {
   "carbohydrates": $carbohydrates,
   "proteins": $proteins,
   "fats": $fats,
-  "water": $water
+  "water": $water,
+  "foodItems": $foodItemsJson
 }''';
   }
 
   @override
   String toString() {
-    return 'NutritionData(date: $date, calories: $calories, carbohydrates: $carbohydrates, proteins: $proteins, fats: $fats, water: $water)';
+    return 'NutritionData(date: $date, calories: $calories, carbohydrates: $carbohydrates, proteins: $proteins, fats: $fats, water: $water, foodItems: ${foodItems.length} items)';
   }
 
   @override
@@ -164,7 +167,17 @@ class NutritionData {
         other.carbohydrates == carbohydrates &&
         other.proteins == proteins &&
         other.fats == fats &&
-        other.water == water;
+        other.water == water &&
+        _listEquals(other.foodItems, foodItems);
+  }
+
+  bool _listEquals<T>(List<T>? a, List<T>? b) {
+    if (a == null) return b == null;
+    if (b == null || a.length != b.length) return false;
+    for (int index = 0; index < a.length; index += 1) {
+      if (a[index] != b[index]) return false;
+    }
+    return true;
   }
 
   @override
@@ -174,6 +187,7 @@ class NutritionData {
         carbohydrates.hashCode ^
         proteins.hashCode ^
         fats.hashCode ^
-        water.hashCode;
+        water.hashCode ^
+        foodItems.hashCode;
   }
 }

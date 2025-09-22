@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'src/features/home/home_controller.dart';
 import 'src/features/home/home_panel_page.dart';
+import 'src/shared/nutrition_data_controller.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
@@ -11,7 +11,9 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => HomeController())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => NutritionDataController()),
+      ],
       child: MaterialApp(
         title: 'Daily Wellness Tracker',
         theme: ThemeData(

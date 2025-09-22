@@ -1,11 +1,11 @@
 import 'dart:collection';
 
-import 'package:daily_wellness_tracker/src/models/food_item.dart';
+import 'package:daily_wellness_tracker/src/shared/models/food_item.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/nutrition_data.dart';
+import 'models/nutrition_data.dart';
 
-class HomeController extends ChangeNotifier {
+class NutritionDataController extends ChangeNotifier {
   final List<NutritionData> _listNutritionData = [];
 
   UnmodifiableListView<NutritionData> get listNutritionData =>

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../food/add_food_page.dart';
-import 'home_controller.dart';
+import '../../shared/nutrition_data_controller.dart';
 
 class HomePanelPage extends StatefulWidget {
   const HomePanelPage({super.key});
@@ -14,14 +14,14 @@ class HomePanelPage extends StatefulWidget {
 
 class _HomePanelPageState extends State<HomePanelPage>
     with SingleTickerProviderStateMixin {
-  late final HomeController controller;
+  late final NutritionDataController controller;
   late AnimationController _animationController;
   late Animation<double> _progressAnimation;
 
   @override
   void initState() {
     super.initState();
-    controller = context.read<HomeController>();
+    controller = context.read<NutritionDataController>();
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
@@ -45,7 +45,7 @@ class _HomePanelPageState extends State<HomePanelPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Consumer<HomeController>(
+      body: Consumer<NutritionDataController>(
         builder: (context, controller, child) {
           final todayNutritionData = controller.getNutritionDataByDate(
             DateTime.now(),

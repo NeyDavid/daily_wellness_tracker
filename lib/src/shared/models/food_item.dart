@@ -5,6 +5,7 @@ class FoodItem {
   final String name;
   final double calories;
   final double portions;
+  final double weight; // Peso da comida em gramas
   final double carbohydrates;
   final double proteins;
   final double fats;
@@ -15,6 +16,7 @@ class FoodItem {
     required this.name,
     required this.calories,
     required this.portions,
+    required this.weight,
     required this.carbohydrates,
     required this.proteins,
     required this.fats,
@@ -26,6 +28,7 @@ class FoodItem {
       name = '',
       calories = 0.0,
       portions = 1.0,
+      weight = 0.0,
       carbohydrates = 0.0,
       proteins = 0.0,
       fats = 0.0,
@@ -36,6 +39,7 @@ class FoodItem {
     required String name,
     required double calories,
     required double portions,
+    required double weight,
     required double carbohydrates,
     required double proteins,
     required double fats,
@@ -44,6 +48,7 @@ class FoodItem {
        name = name,
        calories = calories,
        portions = portions,
+       weight = weight,
        carbohydrates = carbohydrates,
        proteins = proteins,
        fats = fats,
@@ -54,6 +59,7 @@ class FoodItem {
     String? name,
     double? calories,
     double? portions,
+    double? weight,
     double? carbohydrates,
     double? proteins,
     double? fats,
@@ -64,6 +70,7 @@ class FoodItem {
       name: name ?? this.name,
       calories: calories ?? this.calories,
       portions: portions ?? this.portions,
+      weight: weight ?? this.weight,
       carbohydrates: carbohydrates ?? this.carbohydrates,
       proteins: proteins ?? this.proteins,
       fats: fats ?? this.fats,
@@ -133,6 +140,7 @@ class FoodItem {
       'name': name,
       'calories': calories,
       'portions': portions,
+      'weight': weight,
       'carbohydrates': carbohydrates,
       'proteins': proteins,
       'fats': fats,
@@ -146,6 +154,7 @@ class FoodItem {
       name: map['name']?.toString() ?? '',
       calories: map['calories']?.toDouble() ?? 0.0,
       portions: map['portions']?.toDouble() ?? 1.0,
+      weight: map['weight']?.toDouble() ?? 0.0,
       carbohydrates: map['carbohydrates']?.toDouble() ?? 0.0,
       proteins: map['proteins']?.toDouble() ?? 0.0,
       fats: map['fats']?.toDouble() ?? 0.0,
