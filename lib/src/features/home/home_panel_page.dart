@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../food/add_food_page.dart';
-import '../../shared/nutrition_data_controller.dart';
+import '../meal/add_meal_page.dart';
+import '../history/history_page.dart';
+import '../../nutrition_data_controller.dart';
 
 class HomePanelPage extends StatefulWidget {
   const HomePanelPage({super.key});
@@ -99,8 +100,8 @@ class _HomePanelPageState extends State<HomePanelPage>
                                 child: CircularProgressIndicator(
                                   value: animatedProgress,
                                   strokeWidth: 8,
-                                  backgroundColor: Colors.white.withOpacity(
-                                    0.3,
+                                  backgroundColor: Colors.white.withValues(
+                                    alpha: 0.3,
                                   ),
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     _getProgressColor(currentProgress),
@@ -120,7 +121,9 @@ class _HomePanelPageState extends State<HomePanelPage>
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
                                       blurRadius: 10,
                                       offset: const Offset(0, 5),
                                     ),
@@ -159,7 +162,6 @@ class _HomePanelPageState extends State<HomePanelPage>
                       ),
                     ),
                     SizedBox(height: 32),
-
                     _buildMacroCard(
                       'Carboidratos',
                       todayNutritionData.carbohydrates.toInt(),
@@ -182,9 +184,7 @@ class _HomePanelPageState extends State<HomePanelPage>
                     ),
                     SizedBox(height: 12),
                     _buildWaterCard(todayNutritionData.water.toInt()),
-
                     SizedBox(height: 24),
-
                     Row(
                       children: [
                         Expanded(
@@ -202,7 +202,8 @@ class _HomePanelPageState extends State<HomePanelPage>
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const AddFoodPage(),
+                                  builder: (context) =>
+                                      const AddMealPage(initialTabIndex: 0),
                                 ),
                               );
                             },
@@ -222,16 +223,18 @@ class _HomePanelPageState extends State<HomePanelPage>
                             icon: Icon(Icons.water_drop),
                             label: Text('Adicionar Água'),
                             onPressed: () {
-                              // Adicionar 250ml de água
-                              controller.addWater(250.0);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AddMealPage(initialTabIndex: 1),
+                                ),
+                              );
                             },
                           ),
                         ),
                       ],
                     ),
-
                     Spacer(),
-
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -249,6 +252,13 @@ class _HomePanelPageState extends State<HomePanelPage>
                             Icons.history,
                             'Histórico',
                             false,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const HistoryPage(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -283,42 +293,39 @@ class _HomePanelPageState extends State<HomePanelPage>
     }
   }
 
-  // Cores específicas para cada macronutriente
   Color _getMacroProgressColor(String macroName, double progress) {
     Color baseColor;
 
     switch (macroName.toLowerCase()) {
       case 'carboidratos':
-        baseColor = const Color(0xFF2196F3); // Azul
+        baseColor = const Color(0xFF2196F3);
         break;
       case 'proteína':
-        baseColor = const Color(0xFF4CAF50); // Verde
+        baseColor = const Color(0xFF4CAF50);
         break;
       case 'gordura':
-        baseColor = const Color(0xFFFF9800); // Laranja
+        baseColor = const Color(0xFFFF9800);
         break;
       default:
-        baseColor = const Color(0xFF9C27B0); // Roxo padrão
+        baseColor = const Color(0xFF9C27B0);
     }
 
-    // Ajustar opacidade baseado no progresso
     if (progress < 0.3) {
-      return baseColor.withOpacity(0.4);
+      return baseColor.withValues(alpha: 0.4);
     } else if (progress < 0.7) {
-      return baseColor.withOpacity(0.7);
+      return baseColor.withValues(alpha: 0.7);
     } else {
       return baseColor;
     }
   }
 
-  // Cor específica para água
   Color _getWaterProgressColor(double progress) {
-    const baseColor = Color(0xFF03A9F4); // Azul água
+    const baseColor = Color(0xFF03A9F4);
 
     if (progress < 0.3) {
-      return baseColor.withOpacity(0.4);
+      return baseColor.withValues(alpha: 0.4);
     } else if (progress < 0.7) {
-      return baseColor.withOpacity(0.7);
+      return baseColor.withValues(alpha: 0.7);
     } else {
       return baseColor;
     }
@@ -357,7 +364,6 @@ class _HomePanelPageState extends State<HomePanelPage>
             ],
           ),
           const SizedBox(height: 8),
-          // Barra de progresso
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
@@ -413,7 +419,6 @@ class _HomePanelPageState extends State<HomePanelPage>
             ],
           ),
           const SizedBox(height: 8),
-          // Barra de progresso da água
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
@@ -430,21 +435,33 @@ class _HomePanelPageState extends State<HomePanelPage>
     );
   }
 
-  Widget _buildBottomNavItem(IconData icon, String label, bool isActive) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: isActive ? Colors.black87 : Colors.black54, size: 24),
-        SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
+  Widget _buildBottomNavItem(
+    IconData icon,
+    String label,
+    bool isActive, {
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
             color: isActive ? Colors.black87 : Colors.black54,
-            fontWeight: isActive ? FontWeight.w500 : FontWeight.normal,
+            size: 24,
           ),
-        ),
-      ],
+          SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: isActive ? Colors.black87 : Colors.black54,
+              fontWeight: isActive ? FontWeight.w500 : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

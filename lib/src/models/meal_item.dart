@@ -1,17 +1,17 @@
 // ignore_for_file: prefer_initializing_formals
 
-class FoodItem {
+class MealItem {
   final String id;
   final String name;
   final double calories;
   final double portions;
-  final double weight; // Peso da comida em gramas
+  final double weight;
   final double carbohydrates;
   final double proteins;
   final double fats;
-  final DateTime dateTime; // Data e hora da refeição
+  final DateTime dateTime;
 
-  const FoodItem({
+  const MealItem({
     required this.id,
     required this.name,
     required this.calories,
@@ -23,19 +23,7 @@ class FoodItem {
     required this.dateTime,
   });
 
-  FoodItem.empty()
-    : id = '',
-      name = '',
-      calories = 0.0,
-      portions = 1.0,
-      weight = 0.0,
-      carbohydrates = 0.0,
-      proteins = 0.0,
-      fats = 0.0,
-      dateTime = DateTime.now();
-
-  // Construtor para criar com data/hora específica
-  FoodItem.create({
+  MealItem.create({
     required String name,
     required double calories,
     required double portions,
@@ -54,7 +42,7 @@ class FoodItem {
        fats = fats,
        dateTime = dateTime ?? DateTime.now();
 
-  FoodItem copyWith({
+  MealItem copyWith({
     String? id,
     String? name,
     double? calories,
@@ -65,7 +53,7 @@ class FoodItem {
     double? fats,
     DateTime? dateTime,
   }) {
-    return FoodItem(
+    return MealItem(
       id: id ?? this.id,
       name: name ?? this.name,
       calories: calories ?? this.calories,
@@ -78,7 +66,7 @@ class FoodItem {
     );
   }
 
-  FoodItem calculateTotalNutrition() {
+  MealItem calculateTotalNutrition() {
     return copyWith(
       calories: calories * portions,
       carbohydrates: carbohydrates * portions,
@@ -97,28 +85,6 @@ class FoodItem {
     };
   }
 
-  // Métodos para trabalhar com data e hora
-  String getFormattedTime() {
-    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
-
-  String getFormattedDate() {
-    return '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}';
-  }
-
-  String getFormattedDateTime() {
-    return '${getFormattedDate()} às ${getFormattedTime()}';
-  }
-
-  // Verificar se a refeição é de hoje
-  bool isFromToday() {
-    final now = DateTime.now();
-    return dateTime.year == now.year &&
-        dateTime.month == now.month &&
-        dateTime.day == now.day;
-  }
-
-  // Categorizar por período do dia
   String getMealPeriod() {
     final hour = dateTime.hour;
     if (hour >= 6 && hour < 12) {
@@ -148,8 +114,8 @@ class FoodItem {
     };
   }
 
-  factory FoodItem.fromMap(Map<String, dynamic> map) {
-    return FoodItem(
+  factory MealItem.fromMap(Map<String, dynamic> map) {
+    return MealItem(
       id: map['id']?.toString() ?? '',
       name: map['name']?.toString() ?? '',
       calories: map['calories']?.toDouble() ?? 0.0,

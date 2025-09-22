@@ -1,16 +1,18 @@
 import 'dart:collection';
 
-import 'package:daily_wellness_tracker/src/shared/models/food_item.dart';
-import 'package:flutter/material.dart';
+import '../models/meal_item.dart';
+import '../models/nutrition_data.dart';
+import 'i_nutrition_repository.dart';
 
-import 'models/nutrition_data.dart';
-
-class NutritionDataController extends ChangeNotifier {
+class NutritionRepository implements INutritionRepository {
   final List<NutritionData> _listNutritionData = [];
 
-  UnmodifiableListView<NutritionData> get listNutritionData =>
-      UnmodifiableListView(_listNutritionData);
+  @override
+  List<NutritionData> getAllNutritionData() {
+    return UnmodifiableListView(_listNutritionData);
+  }
 
+  @override
   NutritionData getNutritionDataByDate(DateTime date) {
     final normalizedDate = DateTime(date.year, date.month, date.day);
 
@@ -24,14 +26,14 @@ class NutritionDataController extends ChangeNotifier {
     if (index == -1) {
       final emptyData = NutritionData.forDate(normalizedDate);
       _listNutritionData.add(emptyData);
-
       return emptyData;
     }
 
     return _listNutritionData[index];
   }
 
-  saveFoodItem(List<FoodItem> foodItems) {
+  @override
+  void saveMealItem(List<MealItem> mealItems) {
     final today = DateTime.now();
     final todayDataIndex = _listNutritionData.indexWhere(
       (data) =>
@@ -43,37 +45,16 @@ class NutritionDataController extends ChangeNotifier {
     if (todayDataIndex == -1) {
       final newNutritionData = NutritionData.forDate(
         today,
-      ).addFoodItems(foodItems);
+      ).addMealItems(mealItems);
       _listNutritionData.add(newNutritionData);
     } else {
       _listNutritionData[todayDataIndex] = _listNutritionData[todayDataIndex]
-          .addFoodItems(foodItems);
+          .addMealItems(mealItems);
     }
-    notifyListeners();
   }
 
-  saveFoodItemForDate(List<FoodItem> foodItems, DateTime date) {
-    final normalizedDate = DateTime(date.year, date.month, date.day);
-    final dataIndex = _listNutritionData.indexWhere(
-      (data) =>
-          data.date.year == normalizedDate.year &&
-          data.date.month == normalizedDate.month &&
-          data.date.day == normalizedDate.day,
-    );
-
-    if (dataIndex == -1) {
-      final newNutritionData = NutritionData.forDate(
-        normalizedDate,
-      ).addFoodItems(foodItems);
-      _listNutritionData.add(newNutritionData);
-    } else {
-      _listNutritionData[dataIndex] = _listNutritionData[dataIndex]
-          .addFoodItems(foodItems);
-    }
-    notifyListeners();
-  }
-
-  addWater(double waterAmount, {DateTime? date}) {
+  @override
+  void addWater(double waterAmount, {DateTime? date}) {
     final targetDate = date ?? DateTime.now();
     final normalizedDate = DateTime(
       targetDate.year,
@@ -98,31 +79,66 @@ class NutritionDataController extends ChangeNotifier {
         water: waterAmount,
       );
     }
-    notifyListeners();
   }
 
-  bool hasDataForDate(DateTime date) {
-    return _listNutritionData.any(
-      (data) =>
-          data.date.year == date.year &&
-          data.date.month == date.month &&
-          data.date.day == date.day,
-    );
-  }
-
-  List<DateTime> getDatesWithData() {
-    return _listNutritionData.map((data) => data.date).toList()
-      ..sort((a, b) => b.compareTo(a));
-  }
-
-  clearDataForDate(DateTime date) {
+  @override
+  void removeAllWater(DateTime date) {
     final normalizedDate = DateTime(date.year, date.month, date.day);
-    _listNutritionData.removeWhere(
+    final dataIndex = _listNutritionData.indexWhere(
       (data) =>
           data.date.year == normalizedDate.year &&
           data.date.month == normalizedDate.month &&
           data.date.day == normalizedDate.day,
     );
-    notifyListeners();
+
+    if (dataIndex != -1) {
+      _listNutritionData[dataIndex] = _listNutritionData[dataIndex].copyWith(
+        water: 0.0,
+      );
+    }
+  }
+
+  @override
+  void removeMealItem(DateTime date, MealItem itemToRemove) {
+    final normalizedDate = DateTime(date.year, date.month, date.day);
+    final dataIndex = _listNutritionData.indexWhere(
+      (data) =>
+          data.date.year == normalizedDate.year &&
+          data.date.month == normalizedDate.month &&
+          data.date.day == normalizedDate.day,
+    );
+
+    if (dataIndex != -1) {
+      final currentData = _listNutritionData[dataIndex];
+      final updatedMealItems = List<MealItem>.from(currentData.mealItems);
+
+      final itemIndex = updatedMealItems.indexWhere(
+        (item) => item.id == itemToRemove.id,
+      );
+
+      if (itemIndex != -1) {
+        updatedMealItems.removeAt(itemIndex);
+      }
+
+      double totalCalories = 0.0;
+      double totalCarbs = 0.0;
+      double totalProteins = 0.0;
+      double totalFats = 0.0;
+
+      for (final item in updatedMealItems) {
+        totalCalories += item.calories * item.portions;
+        totalCarbs += item.carbohydrates * item.portions;
+        totalProteins += item.proteins * item.portions;
+        totalFats += item.fats * item.portions;
+      }
+
+      _listNutritionData[dataIndex] = currentData.copyWith(
+        mealItems: updatedMealItems,
+        calories: totalCalories,
+        carbohydrates: totalCarbs,
+        proteins: totalProteins,
+        fats: totalFats,
+      );
+    }
   }
 }

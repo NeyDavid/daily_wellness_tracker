@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'src/features/home/home_panel_page.dart';
-import 'src/shared/nutrition_data_controller.dart';
+import 'src/nutrition_data_controller.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
